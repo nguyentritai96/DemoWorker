@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script>
+    // Check that service workers are supported
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js');
+      });
+    } else {
+      console.log('SW not supported')
+    }
+
+    // Push notify auto
+    if (!("Notification" in window)) {
+      alert("This browser does not support desktop notification");
+    } else if (Notification.permission === "granted") {
+        // Let's check whether notification permissions have already been granted
+
+        // If it's okay let's create a notification
+        var notification = new Notification("Hi there! It is ok");
+    } else if (Notification.permission !== "denied") {
+        // Otherwise, we need to ask the user for permission
+
+        Notification.requestPermission().then(function (permission) {
+          // If the user accepts, let's create a notification
+          if (permission === "granted") {
+            var notification = new Notification("Hi there!");
+          }
+        });
+      }
+    </script>
+<body>
+    <div>Service Hello</div>
+    <button>Sync</button>
+
+    
+</body>
+<script>
+  document.querySelector('button').addEventListener('click', async () => {
+    var swReg = await navigator.serviceWorker.register('/sw-button.js');
+    swReg.sync.register('addSyncButton').then(() => {
+      // Có thể gửi dữ liệu vào IndexedDB
+      console.log('Sync OK')
+    })
+  })
+</script>
+</html>
